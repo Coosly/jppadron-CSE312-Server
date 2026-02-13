@@ -3,12 +3,31 @@ class Request:
     def __init__(self, request: bytes):
         # TODO: parse the bytes of the request and populate the following instance variables
 
-        self.body = b""
-        self.method = ""
-        self.path = ""
-        self.http_version = ""
-        self.headers = {}
-        self.cookies = {}
+        rest, self.body = request.split(b'\r\n\r\n', 1)
+        requestLine, headers =  rest.split(b'\r\n', 1)
+
+        self.method = requestLine.split(b' ')[0].decode('ascii')
+        self.path = requestLine.split(b' ')[1].decode('utf-8')
+        self.http_version = requestLine.split(b' ')[2].decode('ascii')
+
+        headers = headers.decode('ascii').strip().split('\r\n')
+        header_var = {}
+
+        for header in headers:
+            key, value = header.split(':', 1)
+            header_var[key.strip()] = value.strip()
+
+        self.headers = header_var
+
+        cookies = header_var.get('Cookie')
+        cookie_var = {}
+
+        if cookies:
+            for cookie in cookies.split(';'):
+                key, value = cookie.strip().split('=', 1)
+                cookie_var[key] = value
+
+        self.cookies = cookie_var
 
 
 def test1():
