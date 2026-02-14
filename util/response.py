@@ -3,15 +3,23 @@ import json
 
 class Response:
     def __init__(self):
+        self.status = '200 OK'
+        self.headers_ = ''
+        self.body_ = b''
         pass
 
     def set_status(self, code, text):
+        codeStr = str(code)
+        self.status = codeStr + ' ' + text
         pass
 
     def headers(self, headers):
+        for header_key in headers:
+            self.headers_ = self.headers + header_key + ': ' + headers[header_key] + '\r\n'
         pass
 
     def cookies(self, cookies):
+
         pass
 
     def bytes(self, data):
