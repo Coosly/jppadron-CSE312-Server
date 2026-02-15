@@ -42,6 +42,5 @@ def test1():
     # It's recommended that you complete this test and add others, including at least one
     # test using a POST request. Also, ensure that the types of all values are correct
 
-
 if __name__ == '__main__':
     test1()
