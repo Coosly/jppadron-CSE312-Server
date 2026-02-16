@@ -1,12 +1,19 @@
 from util.response import Response
+import os
 
 def public(request, handler):
     res = Response()
     res.content_type_ = type_sniff(request)
     filename = request.path.lstrip('/')
-    with open(filename, 'rb') as file:
-        public_file = file.read()
-        res.bytes(public_file)
+    try:
+        with open(filename, 'rb') as file:
+            public_file = file.read()
+            res.bytes(public_file)
+            handler.request.sendall(res.to_data())
+            return
+    except FileNotFoundError:
+        res.set_status(404, "Not Found")
+        res.text("File Not Found")
         handler.request.sendall(res.to_data())
         return
 
@@ -14,7 +21,8 @@ def public(request, handler):
 
 def type_sniff(request):
     path = request.path
-    file_type = path.split('.')[1]
+    file_ = path.rsplit('.', 1)
+    file_type = file_[1]
     if file_type == 'html':
         return 'Content-Type: text/html; charset=utf-8\r\n'
     elif file_type == 'jpg':
@@ -32,4 +40,4 @@ def type_sniff(request):
     elif file_type == 'js':
         return 'Content-Type: text/javascript; charset=utf-8\r\n'
     else:
-        return 'Content-Type: text/html; charset=utf-8\r\n'
+        return 'Content-Type: image/x-icon\r\n'

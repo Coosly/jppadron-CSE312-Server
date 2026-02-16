@@ -11,7 +11,11 @@ class Request:
             self.cookies = {}
             return
 
-        rest, self.body = request.split(b'\r\n\r\n', 1)
+        if b'\r\n\r\n' in request:
+            rest, self.body = request.split(b'\r\n\r\n', 1)
+        else:
+            rest = request
+            self.body = b''
         requestLine, headers =  rest.split(b'\r\n', 1)
 
         self.method = requestLine.split(b' ')[0].decode('ascii')

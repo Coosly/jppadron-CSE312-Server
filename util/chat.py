@@ -15,7 +15,7 @@ def find_user(request, res):
     if request.cookies.get("session"):
         session_id = request.cookies.get("session")
         session_id = session_id.split(';')[0]
-        chats = chat_collection.find({"session": session_id}).to_list()
+        chats = list(chat_collection.find({"session": session_id}))
         if chats == []:
             session_id = str(uuid.uuid4())
             user_id = "Joey" + str(uuid.uuid4())
@@ -42,7 +42,7 @@ def create_chat(request, handler):
 
 def get_chat(request, handler):
     res = Response()
-    jason = chat_collection.find({}, {"_id" : 0, "session" : 0}).to_list()
+    jason = list(chat_collection.find({}, {"_id" : 0, "session" : 0}))
     res.json({"messages" : jason})
     handler.request.sendall(res.to_data())
     return

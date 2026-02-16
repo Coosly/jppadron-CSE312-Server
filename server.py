@@ -12,10 +12,10 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
 
     def __init__(self, request, client_address, server):
         self.router = Router()
+        self.router.add_route("GET", "/public", public, False)
         self.router.add_route("GET", "/hello", hello_path, True)
         self.router.add_route("GET", "/", page, True)
         self.router.add_route("GET", "/chat", page, True)
-        self.router.add_route("GET", "/public", public, False)
         self.router.add_route("POST", "/api/chats", chat.create_chat, False)
         self.router.add_route("GET", "/api/chats", chat.get_chat, False)
         # self.router.add_route("PATCH", "/api/chats", chat.update_chat, False)
