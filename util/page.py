@@ -11,6 +11,7 @@ def page(request, handler):
                 res.bytes(home_page)
                 res.content_type_ = 'Content-Type: text/html; charset=utf-8\r\n'
                 handler.request.sendall(res.to_data())
+                return
         if request.path == '/chat':
             with open('public/chat.html', 'rb') as chat_file:
                 chat_html = chat_file.read()
@@ -19,3 +20,4 @@ def page(request, handler):
                 res.bytes(chat_page)
                 res.content_type_ = 'Content-Type: text/html; charset=utf-8\r\n'
                 handler.request.sendall(res.to_data())
+                return

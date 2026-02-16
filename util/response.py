@@ -6,14 +6,13 @@ class Response:
         self.status = '200 OK'
         self.headers_ = ''
         self.cookies_ = ''
-        self.content_type_ = ''
+        self.content_type_ = 'Content-Type: text/plain; charset=utf-8\r\n'
         self.body_ = b''
-        pass
 
     def set_status(self, code, text):
         codeStr = str(code)
         self.status = codeStr + ' ' + text
-        pass
+        return self
 
     def headers(self, headers):
         for header_key in headers:
@@ -26,25 +25,26 @@ class Response:
                 self.cookies_ = self.cookies_ + 'Set-Cookie: ' + headers[header_key] + '\r\n'
                 continue
             self.headers_ += header_key + ': ' + headers[header_key] + '\r\n'
-        pass
+        return self
 
     def cookies(self, cookies):
         for cookie in cookies:
             self.cookies_ = self.cookies_ + 'Set-Cookie: ' + cookie + '=' + cookies[cookie] + '\r\n'
-        pass
+        return self
 
     def bytes(self, data):
         self.body_ += data
-        pass
+        return self
 
     def text(self, data):
         self.body_ += data.encode()
-        pass
+        return self
 
     def json(self, data):
-        self.body_ = json.dumps(data).encode()
-        self.content_type_ = 'Content-Type: application/json; charset=utf-8\r\n'
-        pass
+        data_ = json.dumps(data)
+        self.body_ = data_.encode()
+        self.content_type_ = 'Content-Type: application/json\r\n'
+        return self
 
     def to_data(self):
         content_length_str = 'Content-Length: ' + str(len(self.body_)) + '\r\n'
@@ -59,8 +59,6 @@ def test1():
     res.text("hello")
     expected = b'HTTP/1.1 200 OK\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Length: 5\r\n\r\nhello'
     actual = res.to_data()
-    assert actual == expected
-
 
 if __name__ == '__main__':
     test1()

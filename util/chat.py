@@ -2,7 +2,6 @@ import json
 from uuid import uuid4
 
 from pymongo import MongoClient
-from util import response
 import html
 import uuid
 
@@ -36,12 +35,14 @@ def create_chat(request, handler):
     user_id, session_id = find_user(request, res)
     content = json.loads(request.body.decode("utf-8")).get("content")
     content = html.escape(content)
-    chat_collection.insert_one({"author" : user_id, "id" : str(uuid.uuid4()), "content" : content, "updated" : False, "session" : session_id})
+    chat_collection.insert_one({"author" : str(user_id), "id" : str(uuid.uuid4()), "content" : str(content), "updated" : False, "session" : str(session_id)})
     res.text("Message sent successfully")
     handler.request.sendall(res.to_data())
+    return
 
 def get_chat(request, handler):
     res = Response()
     jason = chat_collection.find({}, {"_id" : 0, "session" : 0}).to_list()
     res.json({"messages" : jason})
     handler.request.sendall(res.to_data())
+    return

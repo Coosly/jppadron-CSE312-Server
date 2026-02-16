@@ -3,10 +3,12 @@ from util.response import Response
 def public(request, handler):
     res = Response()
     res.content_type_ = type_sniff(request)
-    with open(request.path.lstrip('/'), 'rb') as file:
+    filename = request.path.lstrip('/')
+    with open(filename, 'rb') as file:
         public_file = file.read()
         res.bytes(public_file)
         handler.request.sendall(res.to_data())
+        return
 
 
 
