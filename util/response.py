@@ -6,7 +6,7 @@ class Response:
         self.status = '200 OK'
         self.headers_ = ''
         self.cookies_ = ''
-        self.content_type_ = 'Content-Type: text/plain; charset=utf-8\r\n'
+        self.content_type_ = ''
         self.body_ = b''
         pass
 
@@ -48,6 +48,8 @@ class Response:
 
     def to_data(self):
         content_length_str = 'Content-Length: ' + str(len(self.body_)) + '\r\n'
+        if "X-Content-Type-Options: nosniff" not in self.headers_:
+            self.headers_ += "X-Content-Type-Options: nosniff\r\n"
         data = b'HTTP/1.1 ' + self.status.encode() + b'\r\n' + self.content_type_.encode() + content_length_str.encode() + self.headers_.encode() + self.cookies_.encode() + b'\r\n' + self.body_
         return data
 
@@ -57,7 +59,6 @@ def test1():
     res.text("hello")
     expected = b'HTTP/1.1 200 OK\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Length: 5\r\n\r\nhello'
     actual = res.to_data()
-    print (actual)
     assert actual == expected
 
 

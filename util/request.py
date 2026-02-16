@@ -3,6 +3,14 @@ class Request:
     def __init__(self, request: bytes):
         # TODO: parse the bytes of the request and populate the following instance variables
 
+        if request.strip() == b'':
+            self.method = ''
+            self.path = ''
+            self.body = ''
+            self.headers = {}
+            self.cookies = {}
+            return
+
         rest, self.body = request.split(b'\r\n\r\n', 1)
         requestLine, headers =  rest.split(b'\r\n', 1)
 
