@@ -18,8 +18,11 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
         self.router.add_route("GET", "/chat", page, True)
         self.router.add_route("POST", "/api/chats", chat.create_chat, False)
         self.router.add_route("GET", "/api/chats", chat.get_chat, False)
-        # self.router.add_route("PATCH", "/api/chats", chat.update_chat, False)
-        # self.router.add_route("DELETE", "/api/chats", chat.update_chat, False)
+        self.router.add_route("PATCH", "/api/chats", chat.update_chat, False)
+        self.router.add_route("DELETE", "/api/chats", chat.delete_chat, False)
+        self.router.add_route("PATCH", "/api/reaction", chat.add_reaction, False)
+        self.router.add_route("DELETE", "/api/reaction", chat.delete_reaction, False)
+        self.router.add_route("PATCH", "/api/nickname", chat.set_nickname, False)
         # TODO: Add your routes here
         super().__init__(request, client_address, server)
 

@@ -18,11 +18,11 @@ class Request:
             self.body = b''
         requestLine, headers =  rest.split(b'\r\n', 1)
 
-        self.method = requestLine.split(b' ')[0].decode('ascii')
-        self.path = requestLine.split(b' ')[1].decode('utf-8')
-        self.http_version = requestLine.split(b' ')[2].decode('ascii')
+        self.method = requestLine.split(b' ')[0].decode()
+        self.path = requestLine.split(b' ')[1].decode()
+        self.http_version = requestLine.split(b' ')[2].decode()
 
-        headers = headers.decode('ascii').strip().split('\r\n')
+        headers = headers.decode().strip().split('\r\n')
         header_var = {}
 
         for header in headers:
@@ -37,7 +37,7 @@ class Request:
         if cookies:
             for cookie in cookies.split(';'):
                 key, value = cookie.strip().split('=', 1)
-                cookie_var[key] = value
+                cookie_var[key.strip()] = value.strip()
 
         self.cookies = cookie_var
 
